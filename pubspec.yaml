@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   http: ^0.12.0
   flutter_flipperkit: ^0.0.17
+  flipperkit_http_interceptor: ^0.0.1
 
 dev_dependencies:
   flutter_test:

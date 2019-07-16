@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:flutter_flipperkit/flutter_flipperkit.dart';
+import 'package:flipperkit_http_interceptor/flipperkit_http_interceptor.dart';
 import 'dart:developer';
 
 void main() {
   FlipperClient flipperClient = FlipperClient.getDefault();
 
   flipperClient.addPlugin(new FlipperNetworkPlugin(
-    // Optional, for filtering request
-    // filter: (HttpClientRequest request) {
-    //   String url = '${request.uri}';
-    //   if (url.startsWith('https://via.placeholder.com') || url.startsWith('https://gravatar.com')) {
-    //     return false;
-    //   }
-    //   return true;
-    // }
+    useHttpOverrides: false,
   ));
   flipperClient.addPlugin(new FlipperReduxInspectorPlugin());
   flipperClient.addPlugin(new FlipperSharedPreferencesPlugin());
@@ -68,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String _counter = '';
 
   void _incrementCounter() async {
+    var http = HttpClientWithInterceptor();
     var response = await http.get('https://jsonplaceholder.typicode.com/posts/1');
     setState(() { _counter = response.body; });
     print('got here');
