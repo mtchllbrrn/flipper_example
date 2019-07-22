@@ -4,8 +4,6 @@ platform :ios, '9.0'
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-flipperkit_version = '0.22.0'
-
 project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,
@@ -53,9 +51,6 @@ target 'Runner' do
     end
   }
 
-  # Enable network inspection for Flipper
-  pod 'FlipperKit/SKIOSNetworkPlugin', '~>' + flipperkit_version
-
   # Plugin Pods
   plugin_pods = parse_KV_file('../.flutter-plugins')
   plugin_pods.map { |p|
@@ -71,48 +66,4 @@ post_install do |installer|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
     end
   end
-
-  file_name = Dir.glob("*.xcodeproj")[0]
-  app_project = Xcodeproj::Project.open(file_name)
-  app_project.native_targets.each do |target|
-    target.build_configurations.each do |config|
-      if (config.build_settings['OTHER_SWIFT_FLAGS'])
-        unless config.build_settings['OTHER_SWIFT_FLAGS'].include? '-DFB_SONARKIT_ENABLED'
-          puts 'Adding -DFB_SONARKIT_ENABLED ...'
-          swift_flags = config.build_settings['OTHER_SWIFT_FLAGS']
-          if swift_flags.split.last != '-Xcc'
-            config.build_settings['OTHER_SWIFT_FLAGS'] << ' -Xcc'
-          end
-          config.build_settings['OTHER_SWIFT_FLAGS'] << ' -DFB_SONARKIT_ENABLED'
-        end
-      else
-        puts 'OTHER_SWIFT_FLAGS does not exist thus assigning it to `$(inherited) -Xcc -DFB_SONARKIT_ENABLED`'
-        config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xcc -DFB_SONARKIT_ENABLED'
-
-  file_name = Dir.glob("*.xcodeproj")[0]
-  app_project = Xcodeproj::Project.open(file_name)
-  app_project.native_targets.each do |target|
-    target.build_configurations.each do |config|
-      if (config.build_settings['OTHER_SWIFT_FLAGS'])
-        unless config.build_settings['OTHER_SWIFT_FLAGS'].include? '-DFB_SONARKIT_ENABLED'
-          puts 'Adding -DFB_SONARKIT_ENABLED ...'
-          swift_flags = config.build_settings['OTHER_SWIFT_FLAGS']
-          if swift_flags.split.last != '-Xcc'
-            config.build_settings['OTHER_SWIFT_FLAGS'] << ' -Xcc'
-          end
-          config.build_settings['OTHER_SWIFT_FLAGS'] << ' -DFB_SONARKIT_ENABLED'
-        end
-      else
-        puts 'OTHER_SWIFT_FLAGS does not exist thus assigning it to `$(inherited) -Xcc -DFB_SONARKIT_ENABLED`'
-        config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xcc -DFB_SONARKIT_ENABLED'
-      end
-      app_project.save
-    end
-  end
-  installer.pods_project.save
-      end
-      app_project.save
-    end
-  end
-  installer.pods_project.save
 end
